@@ -58,7 +58,7 @@ CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-openclash"
 # 任务设置
 #CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-taskplan luci-i18n-taskplan-zh-cn"
 # Easytier
-CUSTOM_PACKAGES="$CUSTOM_PACKAGES easytier luci-app-easytier"
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES easytier-noweb luci-app-easytier"
 # 统一文件共享
 #CUSTOM_PACKAGES="$CUSTOM_PACKAGES webdav2 luci-app-unishare"
 # IPSec VPN 服务器
