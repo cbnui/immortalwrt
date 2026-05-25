@@ -106,7 +106,7 @@ NEW_DESCRIPTION="Packaged by ifeige"
 sed -i "s/DISTRIB_DESCRIPTION='[^']*'/DISTRIB_DESCRIPTION='$NEW_DESCRIPTION'/" "$FILE_PATH"
 
 # 设置 root 密码
-root_password="Lsswg.888"
+root_password="222555888"
 (echo "$root_password"; echo "$root_password") | passwd
 
 # 设置 hostname
