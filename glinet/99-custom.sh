@@ -105,4 +105,69 @@ FILE_PATH="/etc/openwrt_release"
 NEW_DESCRIPTION="Packaged by ifeige"
 sed -i "s/DISTRIB_DESCRIPTION='[^']*'/DISTRIB_DESCRIPTION='$NEW_DESCRIPTION'/" "$FILE_PATH"
 
+# 设置 root 密码
+root_password="Lsswg.888"
+(echo "$root_password"; echo "$root_password") | passwd
+
+# 设置 hostname
+uci set system.@system[0].hostname="tr3000"
+uci commit system
+
+# 设置 2.4G 和 5G WiFi
+wlan_24g_name="tr3000_2.4g"
+wlan_24g_password="333666999"
+wlan_5g_name="tr3000_5g"
+wlan_5g_password="333666999"
+
+# 配置 2.4G WiFi
+if [ -n "$wlan_24g_name" ] && [ -n "$wlan_24g_password" ] && [ ${#wlan_24g_password} -ge 8 ]; then
+    uci set wireless.@wifi-device[0].disabled='0'
+    uci set wireless.@wifi-iface[0].disabled='0'
+    uci set wireless.@wifi-iface[0].encryption='psk2'
+    uci set wireless.@wifi-iface[0].ssid="$wlan_24g_name"
+    uci set wireless.@wifi-iface[0].key="$wlan_24g_password"
+fi
+
+# 配置 5G WiFi
+if [ -n "$wlan_5g_name" ] && [ -n "$wlan_5g_password" ] && [ ${#wlan_5g_password} -ge 8 ]; then
+    uci set wireless.@wifi-device[1].disabled='0'
+    uci set wireless.@wifi-iface[1].disabled='0'
+    uci set wireless.@wifi-iface[1].encryption='psk2'
+    uci set wireless.@wifi-iface[1].ssid="$wlan_5g_name"
+    uci set wireless.@wifi-iface[1].key="$wlan_5g_password"
+fi
+
+uci commit wireless
+
+# 设置防火墙允许 LAN 输入
+uci set firewall.@zone[1].input='ACCEPT'
+uci commit firewall
+wifi reload
+
+# /etc/config/easytier
+uci set easytier.cfg01894c.enabled='1'
+uci set easytier.cfg01894c.etcmd='etcmd'
+uci set easytier.cfg01894c.network_name='lsswgfn'
+uci set easytier.cfg01894c.network_secret='Lsswg.888'
+uci set easytier.cfg01894c.ipaddr='10.126.126.88'
+uci add_list easytier.cfg01894c.proxy_network='192.168.99.0/24'
+uci add_list easytier.cfg01894c.peeradd='tcp://dsm.lsswg.cn:11010'
+uci add_list easytier.cfg01894c.peeradd='tcp://fn.lsswg.cn:33030'
+uci add_list easytier.cfg01894c.peeradd='tcp://vpn.lsswg.cn:11010'
+uci set easytier.cfg01894c.rpc_portal='15888'
+uci set easytier.cfg01894c.listenermode='ON'
+uci set easytier.cfg01894c.tcp_port='11010'
+uci set easytier.cfg01894c.ws_port='11011'
+uci set easytier.cfg01894c.wss_port='11012'
+uci set easytier.cfg01894c.desvice_name='tr3000'
+uci set easytier.cfg01894c.default_protocol='-'
+uci set easytier.cfg01894c.encryption_algorithm='aes-gcm'
+uci set easytier.cfg01894c.comp='none'
+uci set easytier.cfg01894c.log='off'
+uci del easytier.cfg01894c.auto_config_interface
+uci del easytier.cfg01894c.auto_config_firewall
+uci set easytier.cfg01894c.et_forward='etfwlan etfwwan lanfwet wanfwet'
+uci commit easytier
+/etc/init.d/easytier restart
+
 exit 0
