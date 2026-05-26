@@ -100,11 +100,6 @@ uci delete ttyd.@ttyd[0].interface
 uci set dropbear.@dropbear[0].Interface=''
 uci commit
 
-# 设置编译作者信息
-FILE_PATH="/etc/openwrt_release"
-NEW_DESCRIPTION="Packaged by ifeige"
-sed -i "s/DISTRIB_DESCRIPTION='[^']*'/DISTRIB_DESCRIPTION='$NEW_DESCRIPTION'/" "$FILE_PATH"
-
 # 设置 root 密码
 root_password="222555888"
 (echo "$root_password"; echo "$root_password") | passwd
@@ -169,5 +164,10 @@ uci del easytier.cfg01894b.auto_config_firewall
 uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
 uci commit easytier
 /etc/init.d/easytier restart
+
+# 设置编译作者信息
+FILE_PATH="/etc/openwrt_release"
+NEW_DESCRIPTION="Packaged by ifeige"
+sed -i "s/DISTRIB_DESCRIPTION='[^']*'/DISTRIB_DESCRIPTION='$NEW_DESCRIPTION'/" "$FILE_PATH"
 
 exit 0
