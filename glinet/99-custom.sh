@@ -169,6 +169,6 @@ uci del easytier.cfg01894b.auto_config_firewall
 uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
 uci commit easytier
 /etc/init.d/easytier restart
-sleep 30 && /etc/init.d/easytier restart
+sleep 180 && /etc/init.d/easytier restart
 
 exit 0
