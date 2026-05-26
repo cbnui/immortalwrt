@@ -156,9 +156,10 @@ uci add_list easytier.cfg01894b.peeradd='tcp://fn.lsswg.cn:33030'
 uci add_list easytier.cfg01894b.peeradd='tcp://vpn.lsswg.cn:11010'
 uci set easytier.cfg01894b.desvice_name='tr3000'
 uci set easytier.cfg01894b.log='off'
+uci del easytier.cfg01894b.auto_config_interface
+uci del easytier.cfg01894b.auto_config_firewall
 uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
 uci commit easytier
 /etc/init.d/easytier restart
-
 
 exit 0
