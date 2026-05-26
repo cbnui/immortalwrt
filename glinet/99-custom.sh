@@ -159,8 +159,6 @@ uci set easytier.cfg01894b.ws_port='11011'
 uci set easytier.cfg01894b.wss_port='11012'
 uci set easytier.cfg01894b.desvice_name='tr3000'
 uci set easytier.cfg01894b.log='off'
-uci del easytier.cfg01894b.auto_config_interface
-uci del easytier.cfg01894b.auto_config_firewall
 uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
 uci commit easytier
 /etc/init.d/easytier restart
