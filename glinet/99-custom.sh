@@ -105,7 +105,7 @@ root_password="222555888"
 (echo "$root_password"; echo "$root_password") | passwd
 
 # 设置 hostname
-uci set system.@system[0].hostname="tr3000"
+uci set system.@system[0].hostname="tr300077"
 uci commit system
 
 # 设置 2.4G 和 5G WiFi
@@ -117,6 +117,8 @@ wlan_5g_password="333666999"
 # 配置 2.4G WiFi
 if [ -n "$wlan_24g_name" ] && [ -n "$wlan_24g_password" ] && [ ${#wlan_24g_password} -ge 8 ]; then
     uci set wireless.@wifi-device[0].disabled='0'
+    uci set wireless.radio0.htmode='HE40'
+    uci set wireless.radio0.cell_density='0'
     uci set wireless.@wifi-iface[0].disabled='0'
     uci set wireless.@wifi-iface[0].encryption='psk2'
     uci set wireless.@wifi-iface[0].ssid="$wlan_24g_name"
@@ -126,6 +128,8 @@ fi
 # 配置 5G WiFi
 if [ -n "$wlan_5g_name" ] && [ -n "$wlan_5g_password" ] && [ ${#wlan_5g_password} -ge 8 ]; then
     uci set wireless.@wifi-device[1].disabled='0'
+    uci set wireless.radio1.htmode='HE160'
+    uci set wireless.radio1.cell_density='0'
     uci set wireless.@wifi-iface[1].disabled='0'
     uci set wireless.@wifi-iface[1].encryption='psk2'
     uci set wireless.@wifi-iface[1].ssid="$wlan_5g_name"
@@ -144,8 +148,8 @@ uci set easytier.cfg01894b.enabled='1'
 uci set easytier.cfg01894b.etcmd='etcmd'
 uci set easytier.cfg01894b.network_name='lsswgfn'
 uci set easytier.cfg01894b.network_secret='Lsswg.888'
-uci set easytier.cfg01894b.ipaddr='10.126.126.99'
-uci add_list easytier.cfg01894b.proxy_network='192.168.99.0/24'
+uci set easytier.cfg01894b.ipaddr='10.126.126.77'
+uci add_list easytier.cfg01894b.proxy_network='192.168.77.0/24'
 uci add_list easytier.cfg01894b.peeradd='tcp://dsm.lsswg.cn:11010'
 uci add_list easytier.cfg01894b.peeradd='tcp://fn.lsswg.cn:33030'
 uci add_list easytier.cfg01894b.peeradd='tcp://vpn.lsswg.cn:11010'
@@ -154,7 +158,7 @@ uci set easytier.cfg01894b.listenermode='ON'
 uci set easytier.cfg01894b.tcp_port='11010'
 uci set easytier.cfg01894b.ws_port='11011'
 uci set easytier.cfg01894b.wss_port='11012'
-uci set easytier.cfg01894b.desvice_name='tr3000'
+uci set easytier.cfg01894b.desvice_name='tr300077'
 uci set easytier.cfg01894b.default_protocol='-'
 uci set easytier.cfg01894b.encryption_algorithm='aes-gcm'
 uci set easytier.cfg01894b.comp='none'
@@ -164,6 +168,14 @@ uci del easytier.cfg01894b.auto_config_firewall
 uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
 uci commit easytier
 /etc/init.d/easytier restart
+
+# /etc/config/p910nd
+uci del p910nd.cfg01f941.runas_root
+uci del p910nd.cfg01f941.mdns
+uci del p910nd.cfg01f941.mdns_ty
+uci del p910nd.cfg01f941.mdns_note
+uci set p910nd.cfg01f941.enabled='1'
+uci set p910nd.cfg01f941.bidirectional='0'
 
 # 设置编译作者信息
 FILE_PATH="/etc/openwrt_release"
