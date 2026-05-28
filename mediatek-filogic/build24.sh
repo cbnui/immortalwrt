@@ -59,8 +59,10 @@ PACKAGES="$PACKAGES luci-i18n-ttyd-zh-cn"
 PACKAGES="$PACKAGES openssh-sftp-server"
 # 文件管理器
 PACKAGES="$PACKAGES luci-i18n-filemanager-zh-cn"
-# frpc
+#frpc
 PACKAGES="$PACKAGES luci-i18n-frpc-zh-cn"
+#打印机相关
+PACKAGES="$PACKAGES luci-i18n-p910nd-zh-cn"
 
 # 第三方软件包 合并
 # ======== shell/custom-packages.sh =======
