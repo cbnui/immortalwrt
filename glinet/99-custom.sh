@@ -190,7 +190,7 @@ uci set frpc.@conf[-1].use_encryption='false'
 uci set frpc.@conf[-1].use_compression='false'
 uci set frpc.@conf[-1].local_ip='127.0.0.1'
 uci set frpc.@conf[-1].local_port='80'
-uci set frpc.@conf[-1].remote_port='88'
+uci set frpc.@conf[-1].remote_port='77'
 # 提交更改
 uci commit frpc
 # 应用配置（重启 frpc 服务）
