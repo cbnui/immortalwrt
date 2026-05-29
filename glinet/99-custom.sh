@@ -177,6 +177,26 @@ uci del p910nd.cfg01f941.mdns_note
 uci set p910nd.cfg01f941.enabled='1'
 uci set p910nd.cfg01f941.bidirectional='0'
 
+# /etc/config/frpc
+uci set frpc.common.server_addr='frp.lsswg.cn'
+uci set frpc.common.token='88888888'
+uci set frpc.common.tls_enable='false'
+uci set frpc.cfg018539.user='root'
+uci set frpc.cfg018539.group='root'
+uci add frpc conf # =cfg043fcb
+uci set frpc.@conf[-1].name='web'
+uci set frpc.@conf[-1].type='tcp'
+uci set frpc.@conf[-1].use_encryption='false'
+uci set frpc.@conf[-1].use_compression='false'
+uci set frpc.@conf[-1].local_ip='127.0.0.1'
+uci set frpc.@conf[-1].local_port='80'
+uci set frpc.@conf[-1].remote_port='88'
+# 提交更改
+uci commit frpc
+# 应用配置（重启 frpc 服务）
+/etc/init.d/frpc restart
+
+
 # 设置编译作者信息
 FILE_PATH="/etc/openwrt_release"
 NEW_DESCRIPTION="Packaged by ifeige"
