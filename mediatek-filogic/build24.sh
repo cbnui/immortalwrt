@@ -22,8 +22,6 @@ sed -i '1i\
 arch aarch64_generic 10\n\
 arch aarch64_cortex-a53 15' repositories.conf
 
-
-
 # yml 传入的路由器型号 PROFILE
 echo "Building for profile: $PROFILE"
 
@@ -44,7 +42,6 @@ cat /home/build/immortalwrt/files/etc/config/pppoe-settings
 # 输出调试信息
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting build process..."
 
-
 # 定义所需安装的包列表 下列插件你都可以自行删减
 PACKAGES=""
 PACKAGES="$PACKAGES curl luci luci-i18n-base-zh-cn"
@@ -62,7 +59,7 @@ PACKAGES="$PACKAGES luci-i18n-filemanager-zh-cn"
 #frpc
 PACKAGES="$PACKAGES luci-i18n-frpc-zh-cn"
 #打印机相关
-#PACKAGES="$PACKAGES luci-i18n-p910nd-zh-cn kmod-usb-printer kmod-lp"
+PACKAGES="$PACKAGES luci-i18n-p910nd-zh-cn kmod-usb-printer kmod-lp"
 
 # 第三方软件包 合并
 # ======== shell/custom-packages.sh =======
@@ -102,7 +99,6 @@ if echo "$PACKAGES" | grep -q "luci-app-openclash"; then
 else
     echo "⚪️ 未选择 luci-app-openclash"
 fi
-
 
 # 构建镜像
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Building image with the following packages:"
