@@ -62,7 +62,7 @@ PACKAGES="$PACKAGES luci-i18n-filemanager-zh-cn"
 #frpc
 PACKAGES="$PACKAGES luci-i18n-frpc-zh-cn"
 #打印机相关
-PACKAGES="$PACKAGES luci-i18n-p910nd-zh-cn kmod-usb-printer kmod-lp"
+#PACKAGES="$PACKAGES luci-i18n-p910nd-zh-cn kmod-usb-printer kmod-lp"
 
 # 第三方软件包 合并
 # ======== shell/custom-packages.sh =======
