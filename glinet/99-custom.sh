@@ -170,12 +170,12 @@ uci commit easytier
 /etc/init.d/easytier restart
 
 # /etc/config/p910nd
-uci del p910nd.cfg01f941.runas_root
-uci del p910nd.cfg01f941.mdns
-uci del p910nd.cfg01f941.mdns_ty
-uci del p910nd.cfg01f941.mdns_note
-uci set p910nd.cfg01f941.enabled='1'
-uci set p910nd.cfg01f941.bidirectional='0'
+#uci del p910nd.cfg01f941.runas_root
+#uci del p910nd.cfg01f941.mdns
+#uci del p910nd.cfg01f941.mdns_ty
+#uci del p910nd.cfg01f941.mdns_note
+#uci set p910nd.cfg01f941.enabled='1'
+#uci set p910nd.cfg01f941.bidirectional='0'
 
 # /etc/config/frpc
 uci set frpc.common.server_addr='frp.lsswg.cn'
