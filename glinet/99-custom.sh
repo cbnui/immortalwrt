@@ -109,9 +109,9 @@ uci set system.@system[0].hostname="tr300077"
 uci commit system
 
 # 设置 2.4G 和 5G WiFi
-wlan_24g_name="tr3000"
+wlan_24g_name="tr300077"
 wlan_24g_password="333666999"
-wlan_5g_name="tr3000"
+wlan_5g_name="tr300077"
 wlan_5g_password="333666999"
 
 # 配置 2.4G WiFi
