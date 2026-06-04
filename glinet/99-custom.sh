@@ -196,6 +196,85 @@ uci commit frpc
 # 应用配置（重启 frpc 服务）
 /etc/init.d/frpc restart
 
+# ==========================
+# 1️⃣ 创建网络接口
+# ==========================
+# Guest 网段
+uci set network.Guest='interface'
+uci set network.Guest.proto='static'
+uci set network.Guest.ipaddr='192.168.89.1'
+uci set network.Guest.netmask='255.255.255.0'
+
+# 创建桥接 br-guest
+uci set network.brguest='device'
+uci set network.brguest.name='br-guest'
+uci set network.brguest.type='bridge'
+
+# 绑定 Guest 接口到桥
+uci set network.Guest.device='br-guest'
+uci commit network
+
+# ==========================
+# 2️⃣ 创建 DHCP 服务
+# ==========================
+uci set dhcp.Guest='dhcp'
+uci set dhcp.Guest.interface='Guest'
+uci set dhcp.Guest.start='100'
+uci set dhcp.Guest.limit='150'
+uci set dhcp.Guest.leasetime='12h'
+uci commit dhcp
+
+# ==========================
+# 3️⃣ 创建无线访客网络
+# ==========================
+
+# 2.4G
+uci set wireless.guest2g='wifi-iface'
+uci set wireless.guest2g.device='radio0'
+uci set wireless.guest2g.mode='ap'
+uci set wireless.guest2g.ssid='tr3000vpn'
+uci set wireless.guest2g.encryption='psk2'
+uci set wireless.guest2g.key='333666999'
+uci set wireless.guest2g.network='Guest'
+
+# 5G
+uci set wireless.guest5g='wifi-iface'
+uci set wireless.guest5g.device='radio1'
+uci set wireless.guest5g.mode='ap'
+uci set wireless.guest5g.ssid='tr3000vpn'
+uci set wireless.guest5g.encryption='psk2'
+uci set wireless.guest5g.key='333666999'
+uci set wireless.guest5g.network='Guest'
+
+uci commit wireless
+
+# ==========================
+# 4️⃣ 防火墙配置
+# ==========================
+
+# 新建 Guest 区域
+uci add firewall zone
+uci set firewall.@zone[-1].name='Guest'
+uci set firewall.@zone[-1].input='ACCEPT'
+uci set firewall.@zone[-1].output='ACCEPT'
+uci set firewall.@zone[-1].forward='ACCEPT'
+uci set firewall.@zone[-1].masq='1'
+uci add_list firewall.@zone[-1].network='Guest'
+
+# Guest → WAN
+uci add firewall forwarding
+uci set firewall.@forwarding[-1].src='Guest'
+uci set firewall.@forwarding[-1].dest='wan'
+
+uci commit firewall
+
+# ==========================
+# 5️⃣ 应用配置
+# ==========================
+service network reload
+wifi reload
+/etc/init.d/dnsmasq restart
+/etc/init.d/firewall restart
 
 # 设置编译作者信息
 FILE_PATH="/etc/openwrt_release"
