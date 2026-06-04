@@ -28,7 +28,6 @@ if [ -f "$IP_VALUE_FILE" ]; then
     echo "custom router ip is $CUSTOM_IP" >> $LOGFILE
 fi
 
-
 # 判断是否启用 PPPoE
 echo "print enable_pppoe value=== $enable_pppoe" >> $LOGFILE
 if [ "$enable_pppoe" = "yes" ]; then
