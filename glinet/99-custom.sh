@@ -143,32 +143,6 @@ uci set firewall.@zone[1].input='ACCEPT'
 uci commit firewall
 wifi reload
 
-# /etc/config/easytier
-uci set easytier.cfg01894b.enabled='1'
-uci set easytier.cfg01894b.etcmd='etcmd'
-uci set easytier.cfg01894b.network_name='lsswgfn'
-uci set easytier.cfg01894b.network_secret='Lsswg.888'
-uci set easytier.cfg01894b.ipaddr='10.126.126.77'
-uci add_list easytier.cfg01894b.proxy_network='192.168.77.0/24'
-uci add_list easytier.cfg01894b.peeradd='tcp://dsm.lsswg.cn:11010'
-uci add_list easytier.cfg01894b.peeradd='tcp://fn.lsswg.cn:33030'
-uci add_list easytier.cfg01894b.peeradd='tcp://vpn.lsswg.cn:11010'
-uci set easytier.cfg01894b.rpc_portal='15888'
-uci set easytier.cfg01894b.listenermode='ON'
-uci set easytier.cfg01894b.tcp_port='11010'
-uci set easytier.cfg01894b.ws_port='11011'
-uci set easytier.cfg01894b.wss_port='11012'
-uci set easytier.cfg01894b.desvice_name='tr300077'
-uci set easytier.cfg01894b.default_protocol='-'
-uci set easytier.cfg01894b.encryption_algorithm='aes-gcm'
-uci set easytier.cfg01894b.comp='none'
-uci set easytier.cfg01894b.log='off'
-uci del easytier.cfg01894b.auto_config_interface
-uci del easytier.cfg01894b.auto_config_firewall
-uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
-uci commit easytier
-/etc/init.d/easytier restart
-
 # /etc/config/p910nd
 uci del p910nd.cfg01f941.runas_root
 uci del p910nd.cfg01f941.mdns
@@ -195,6 +169,33 @@ uci set frpc.@conf[-1].remote_port='77'
 uci commit frpc
 # 应用配置（重启 frpc 服务）
 /etc/init.d/frpc restart
+
+# /etc/config/easytier
+uci set easytier.cfg01894b.enabled='1'
+uci set easytier.cfg01894b.etcmd='etcmd'
+uci set easytier.cfg01894b.network_name='lsswgfn'
+uci set easytier.cfg01894b.network_secret='Lsswg.888'
+uci set easytier.cfg01894b.ipaddr='10.126.126.77'
+uci add_list easytier.cfg01894b.proxy_network='192.168.77.0/24'
+uci add_list easytier.cfg01894b.peeradd='tcp://dsm.lsswg.cn:11010'
+uci add_list easytier.cfg01894b.peeradd='tcp://fn.lsswg.cn:33030'
+uci add_list easytier.cfg01894b.peeradd='tcp://vpn.lsswg.cn:11010'
+uci set easytier.cfg01894b.rpc_portal='15888'
+uci set easytier.cfg01894b.listenermode='ON'
+uci set easytier.cfg01894b.tcp_port='11010'
+uci set easytier.cfg01894b.ws_port='11011'
+uci set easytier.cfg01894b.wss_port='11012'
+uci set easytier.cfg01894b.desvice_name='tr300077'
+uci set easytier.cfg01894b.default_protocol='-'
+uci set easytier.cfg01894b.encryption_algorithm='aes-gcm'
+uci set easytier.cfg01894b.comp='none'
+uci set easytier.cfg01894b.log='off'
+uci del easytier.cfg01894b.auto_config_interface
+uci del easytier.cfg01894b.auto_config_firewall
+uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
+uci commit easytier
+/etc/init.d/easytier restart
+/etc/init.d/easytier restart
 
 # 设置编译作者信息
 FILE_PATH="/etc/openwrt_release"
