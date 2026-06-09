@@ -194,11 +194,7 @@ uci del easytier.cfg01894b.auto_config_interface
 uci del easytier.cfg01894b.auto_config_firewall
 uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
 uci commit easytier
-#/etc/init.d/easytier restart
-#service easytier restart
-service easytier start
-service easytier stop
-service easytier start
+/etc/init.d/easytier restart
 
 # 设置编译作者信息
 FILE_PATH="/etc/openwrt_release"
