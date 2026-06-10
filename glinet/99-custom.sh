@@ -118,6 +118,7 @@ wlan_5g_password="333666999"
 if [ -n "$wlan_24g_name" ] && [ -n "$wlan_24g_password" ] && [ ${#wlan_24g_password} -ge 8 ]; then
     uci set wireless.@wifi-device[0].disabled='0'
     uci set wireless.radio0.htmode='HE40'
+    uci set wireless.radio0.channel='6'
     uci set wireless.radio0.cell_density='0'
     uci set wireless.@wifi-iface[0].disabled='0'
     uci set wireless.@wifi-iface[0].encryption='psk2'
@@ -129,6 +130,7 @@ fi
 if [ -n "$wlan_5g_name" ] && [ -n "$wlan_5g_password" ] && [ ${#wlan_5g_password} -ge 8 ]; then
     uci set wireless.@wifi-device[1].disabled='0'
     uci set wireless.radio1.htmode='HE160'
+    uci set wireless.radio1.channel='149'
     uci set wireless.radio1.cell_density='0'
     uci set wireless.@wifi-iface[1].disabled='0'
     uci set wireless.@wifi-iface[1].encryption='psk2'
