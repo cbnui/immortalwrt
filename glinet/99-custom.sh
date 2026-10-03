@@ -108,32 +108,44 @@ root_password="222555888"
 uci set system.@system[0].hostname="tr300077"
 uci commit system
 
-# 设置 2.4G 和 5G WiFi
+# 设置 2.4G 和 5G WiFi 参数
 wlan_24g_name="tr3000"
 wlan_24g_password="333666999"
 wlan_5g_name="tr3000"
 wlan_5g_password="333666999"
 
-# 配置 2.4G WiFi
+# 配置 2.4G 主 WiFi (radio0)
 if [ -n "$wlan_24g_name" ] && [ -n "$wlan_24g_password" ] && [ ${#wlan_24g_password} -ge 8 ]; then
-    uci set wireless.@wifi-device[0].disabled='0'
+    uci set wireless.radio0.disabled='0'
     uci set wireless.radio0.htmode='HE40'
     uci set wireless.radio0.cell_density='0'
-    uci set wireless.@wifi-iface[0].disabled='0'
-    uci set wireless.@wifi-iface[0].encryption='psk2'
-    uci set wireless.@wifi-iface[0].ssid="$wlan_24g_name"
-    uci set wireless.@wifi-iface[0].key="$wlan_24g_password"
+
+    # 使用特定的名称 default_radio0 替代匿名索引
+    uci set wireless.default_radio0='wifi-iface'
+    uci set wireless.default_radio0.device='radio0'
+    uci set wireless.default_radio0.mode='ap'
+    uci set wireless.default_radio0.network='lan'
+    uci set wireless.default_radio0.disabled='0'
+    uci set wireless.default_radio0.encryption='psk2'
+    uci set wireless.default_radio0.ssid="$wlan_24g_name"
+    uci set wireless.default_radio0.key="$wlan_24g_password"
 fi
 
-# 配置 5G WiFi
+# 配置 5G 主 WiFi (radio1)
 if [ -n "$wlan_5g_name" ] && [ -n "$wlan_5g_password" ] && [ ${#wlan_5g_password} -ge 8 ]; then
-    uci set wireless.@wifi-device[1].disabled='0'
+    uci set wireless.radio1.disabled='0'
     uci set wireless.radio1.htmode='HE160'
     uci set wireless.radio1.cell_density='0'
-    uci set wireless.@wifi-iface[1].disabled='0'
-    uci set wireless.@wifi-iface[1].encryption='psk2'
-    uci set wireless.@wifi-iface[1].ssid="$wlan_5g_name"
-    uci set wireless.@wifi-iface[1].key="$wlan_5g_password"
+
+    # 使用特定的名称 default_radio1 替代匿名索引
+    uci set wireless.default_radio1='wifi-iface'
+    uci set wireless.default_radio1.device='radio1'
+    uci set wireless.default_radio1.mode='ap'
+    uci set wireless.default_radio1.network='lan'
+    uci set wireless.default_radio1.disabled='0'
+    uci set wireless.default_radio1.encryption='psk2'
+    uci set wireless.default_radio1.ssid="$wlan_5g_name"
+    uci set wireless.default_radio1.key="$wlan_5g_password"
 fi
 
 uci commit wireless
@@ -247,6 +259,7 @@ uci set wireless.guest5g.key='333666999'
 uci set wireless.guest5g.network='Guest'
 
 uci commit wireless
+wifi reload
 
 # ==========================
 # 4️⃣ 防火墙配置
@@ -275,10 +288,5 @@ service network reload
 wifi reload
 /etc/init.d/dnsmasq restart
 /etc/init.d/firewall restart
-
-# 设置编译作者信息
-FILE_PATH="/etc/openwrt_release"
-NEW_DESCRIPTION="Packaged by ifeige"
-sed -i "s/DISTRIB_DESCRIPTION='[^']*'/DISTRIB_DESCRIPTION='$NEW_DESCRIPTION'/" "$FILE_PATH"
 
 exit 0
