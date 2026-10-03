@@ -108,44 +108,32 @@ root_password="222555888"
 uci set system.@system[0].hostname="tr300077"
 uci commit system
 
-# 设置 2.4G 和 5G WiFi 参数
+# 设置 2.4G 和 5G WiFi
 wlan_24g_name="tr3000"
 wlan_24g_password="333666999"
 wlan_5g_name="tr3000"
 wlan_5g_password="333666999"
 
-# 配置 2.4G 主 WiFi (radio0)
+# 配置 2.4G WiFi
 if [ -n "$wlan_24g_name" ] && [ -n "$wlan_24g_password" ] && [ ${#wlan_24g_password} -ge 8 ]; then
-    uci set wireless.radio0.disabled='0'
+    uci set wireless.@wifi-device[0].disabled='0'
     uci set wireless.radio0.htmode='HE40'
     uci set wireless.radio0.cell_density='0'
-
-    # 使用特定的名称 default_radio0 替代匿名索引
-    uci set wireless.default_radio0='wifi-iface'
-    uci set wireless.default_radio0.device='radio0'
-    uci set wireless.default_radio0.mode='ap'
-    uci set wireless.default_radio0.network='lan'
-    uci set wireless.default_radio0.disabled='0'
-    uci set wireless.default_radio0.encryption='psk2'
-    uci set wireless.default_radio0.ssid="$wlan_24g_name"
-    uci set wireless.default_radio0.key="$wlan_24g_password"
+    uci set wireless.@wifi-iface[0].disabled='0'
+    uci set wireless.@wifi-iface[0].encryption='psk2'
+    uci set wireless.@wifi-iface[0].ssid="$wlan_24g_name"
+    uci set wireless.@wifi-iface[0].key="$wlan_24g_password"
 fi
 
-# 配置 5G 主 WiFi (radio1)
+# 配置 5G WiFi
 if [ -n "$wlan_5g_name" ] && [ -n "$wlan_5g_password" ] && [ ${#wlan_5g_password} -ge 8 ]; then
-    uci set wireless.radio1.disabled='0'
+    uci set wireless.@wifi-device[1].disabled='0'
     uci set wireless.radio1.htmode='HE160'
     uci set wireless.radio1.cell_density='0'
-
-    # 使用特定的名称 default_radio1 替代匿名索引
-    uci set wireless.default_radio1='wifi-iface'
-    uci set wireless.default_radio1.device='radio1'
-    uci set wireless.default_radio1.mode='ap'
-    uci set wireless.default_radio1.network='lan'
-    uci set wireless.default_radio1.disabled='0'
-    uci set wireless.default_radio1.encryption='psk2'
-    uci set wireless.default_radio1.ssid="$wlan_5g_name"
-    uci set wireless.default_radio1.key="$wlan_5g_password"
+    uci set wireless.@wifi-iface[1].disabled='0'
+    uci set wireless.@wifi-iface[1].encryption='psk2'
+    uci set wireless.@wifi-iface[1].ssid="$wlan_5g_name"
+    uci set wireless.@wifi-iface[1].key="$wlan_5g_password"
 fi
 
 uci commit wireless
@@ -207,86 +195,5 @@ uci set frpc.@conf[-1].remote_port='88'
 uci commit frpc
 # 应用配置（重启 frpc 服务）
 /etc/init.d/frpc restart
-
-# ==========================
-# 1️⃣ 创建网络接口
-# ==========================
-# Guest 网段
-uci set network.Guest='interface'
-uci set network.Guest.proto='static'
-uci set network.Guest.ipaddr='192.168.78.1'
-uci set network.Guest.netmask='255.255.255.0'
-
-# 创建桥接 br-guest
-uci set network.brguest='device'
-uci set network.brguest.name='br-guest'
-uci set network.brguest.type='bridge'
-
-# 绑定 Guest 接口到桥
-uci set network.Guest.device='br-guest'
-uci commit network
-
-# ==========================
-# 2️⃣ 创建 DHCP 服务
-# ==========================
-uci set dhcp.Guest='dhcp'
-uci set dhcp.Guest.interface='Guest'
-uci set dhcp.Guest.start='100'
-uci set dhcp.Guest.limit='150'
-uci set dhcp.Guest.leasetime='12h'
-uci commit dhcp
-
-# ==========================
-# 3️⃣ 创建无线访客网络
-# ==========================
-
-# 2.4G
-uci set wireless.guest2g='wifi-iface'
-uci set wireless.guest2g.device='radio0'
-uci set wireless.guest2g.mode='ap'
-uci set wireless.guest2g.ssid='tr30000'
-uci set wireless.guest2g.encryption='psk2'
-uci set wireless.guest2g.key='333666999'
-uci set wireless.guest2g.network='Guest'
-
-# 5G
-uci set wireless.guest5g='wifi-iface'
-uci set wireless.guest5g.device='radio1'
-uci set wireless.guest5g.mode='ap'
-uci set wireless.guest5g.ssid='tr30000'
-uci set wireless.guest5g.encryption='psk2'
-uci set wireless.guest5g.key='333666999'
-uci set wireless.guest5g.network='Guest'
-
-uci commit wireless
-wifi reload
-
-# ==========================
-# 4️⃣ 防火墙配置
-# ==========================
-
-# 新建 Guest 区域
-uci add firewall zone
-uci set firewall.@zone[-1].name='Guest'
-uci set firewall.@zone[-1].input='ACCEPT'
-uci set firewall.@zone[-1].output='ACCEPT'
-uci set firewall.@zone[-1].forward='ACCEPT'
-uci set firewall.@zone[-1].masq='1'
-uci add_list firewall.@zone[-1].network='Guest'
-
-# Guest → WAN
-uci add firewall forwarding
-uci set firewall.@forwarding[-1].src='Guest'
-uci set firewall.@forwarding[-1].dest='wan'
-
-uci commit firewall
-
-# ==========================
-# 5️⃣ 应用配置
-# ==========================
-service network reload
-wifi reload
-/etc/init.d/dnsmasq restart
-/etc/init.d/firewall restart
 
 exit 0
