@@ -7,7 +7,7 @@ else
   # ============= 同步第三方插件库==============
   # 同步第三方软件仓库run/apk
   echo "🔄 正在同步第三方软件仓库 Cloning apk file repo..."
-  git clone --depth=1 https://github.com/wukongdaily/apk.git /tmp/store-apk-repo
+  git clone --depth=1 https://github.com/cbnui/apk.git /tmp/store-apk-repo
 
   # 拷贝 run/arm64 下所有 run 文件和apk文件 到 extra-packages 目录
   mkdir -p /home/build/immortalwrt/extra-packages
@@ -55,12 +55,15 @@ PACKAGES="$PACKAGES luci-i18n-ttyd-zh-cn"
 PACKAGES="$PACKAGES openssh-sftp-server"
 # 文件管理器
 PACKAGES="$PACKAGES luci-i18n-filemanager-zh-cn"
+#frpc
+PACKAGES="$PACKAGES luci-i18n-frpc-zh-cn"
 
+#打印机相关
+PACKAGES="$PACKAGES luci-i18n-p910nd-zh-cn kmod-usb-printer kmod-lp"
 
 # 第三方软件包 合并
 # ======== shell/apk-custom-packages.sh =======
 PACKAGES="$PACKAGES $CUSTOM_PACKAGES"
-
 
 # 判断是否需要编译 Docker 插件
 if [ "$INCLUDE_DOCKER" = "yes" ]; then
