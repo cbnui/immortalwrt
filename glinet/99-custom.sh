@@ -156,7 +156,7 @@ wlan_5g_password="333666999"
     # ==========================
     uci set network.Guest='interface'
     uci set network.Guest.proto='static'
-    uci set network.Guest.ipaddr='192.168.89.1'
+    uci set network.Guest.ipaddr='192.168.78.1'
     uci set network.Guest.netmask='255.255.255.0'
 
     uci set network.brguest='device'
