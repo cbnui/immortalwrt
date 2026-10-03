@@ -487,16 +487,16 @@ on:
           - netgear_r8000
           - smartrg_sr400ac
           - tenda_ac9
-        default: glinet_gl-mt6000
+        default: cudy_tr3000-256mb-v1
       custom_router_ip:
         description: "请设置路由器的管理地址 格式:192.168.x.1 或 10.x.x.1"
         required: true
-        default: "192.168.100.1"
+        default: "192.168.77.1"
       enable_store:
         description: "集成 store 商店"
         required: false
         type: boolean
-        default: false
+        default: true
       include_docker:
         description: |
           是否编译 Docker 插件
