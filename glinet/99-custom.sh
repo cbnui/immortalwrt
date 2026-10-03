@@ -175,50 +175,43 @@ uci del p910nd.cfg01f941.mdns_note
 uci set p910nd.cfg01f941.enabled='1'
 uci set p910nd.cfg01f941.bidirectional='0'
 
-#!/bin/sh
+# ============================================================
+# 1. 主 WiFi：2.4G
+# ============================================================
 
-# =========================================================
-# 1. 主 WiFi：tr3000 → LAN → 192.168.77.0/24
-# =========================================================
+echo "[1/8] 配置主 WiFi 2.4G..."
 
-wlan_24g_name="tr3000"
-wlan_24g_password="333666999"
-
-wlan_5g_name="tr3000"
-wlan_5g_password="333666999"
-
-# 2.4G
-if [ -n "$wlan_24g_name" ] && [ ${#wlan_24g_password} -ge 8 ]; then
-    uci set wireless.@wifi-device[0].disabled='0'
-    uci set wireless.radio0.htmode='HE40'
-    uci set wireless.radio0.cell_density='0'
-
-    uci set wireless.@wifi-iface[0].disabled='0'
-    uci set wireless.@wifi-iface[0].mode='ap'
-    uci set wireless.@wifi-iface[0].ssid="$wlan_24g_name"
-    uci set wireless.@wifi-iface[0].encryption='psk2'
-    uci set wireless.@wifi-iface[0].key="$wlan_24g_password"
-    uci set wireless.@wifi-iface[0].network='lan'
-fi
-
-# 5G
-if [ -n "$wlan_5g_name" ] && [ ${#wlan_5g_password} -ge 8 ]; then
-    uci set wireless.@wifi-device[1].disabled='0'
-    uci set wireless.radio1.htmode='HE160'
-    uci set wireless.radio1.cell_density='0'
-
-    uci set wireless.@wifi-iface[1].disabled='0'
-    uci set wireless.@wifi-iface[1].mode='ap'
-    uci set wireless.@wifi-iface[1].ssid="$wlan_5g_name"
-    uci set wireless.@wifi-iface[1].encryption='psk2'
-    uci set wireless.@wifi-iface[1].key="$wlan_5g_password"
-    uci set wireless.@wifi-iface[1].network='lan'
-fi
+uci set wireless.default_radio0='wifi-iface'
+uci set wireless.default_radio0.device='radio0'
+uci set wireless.default_radio0.network='lan'
+uci set wireless.default_radio0.mode='ap'
+uci set wireless.default_radio0.ssid='tr3000'
+uci set wireless.default_radio0.encryption='psk2'
+uci set wireless.default_radio0.key='333666999'
+uci set wireless.default_radio0.disabled='0'
 
 
-# =========================================================
-# 2. Guest 网络：tr30000 → Guest → 192.168.78.0/24
-# =========================================================
+# ============================================================
+# 2. 主 WiFi：5G
+# ============================================================
+
+echo "[2/8] 配置主 WiFi 5G..."
+
+uci set wireless.default_radio1='wifi-iface'
+uci set wireless.default_radio1.device='radio1'
+uci set wireless.default_radio1.network='lan'
+uci set wireless.default_radio1.mode='ap'
+uci set wireless.default_radio1.ssid='tr3000'
+uci set wireless.default_radio1.encryption='psk2'
+uci set wireless.default_radio1.key='333666999'
+uci set wireless.default_radio1.disabled='0'
+
+
+# ============================================================
+# 3. Guest 网络接口
+# ============================================================
+
+echo "[3/8] 配置 Guest 网络..."
 
 uci set network.Guest='interface'
 uci set network.Guest.proto='static'
@@ -226,14 +219,23 @@ uci set network.Guest.ipaddr='192.168.78.1'
 uci set network.Guest.netmask='255.255.255.0'
 uci set network.Guest.device='br-guest'
 
+
+# ============================================================
+# 4. 创建 Guest Bridge
+# ============================================================
+
+echo "[4/8] 配置 Guest Bridge..."
+
 uci set network.brguest='device'
 uci set network.brguest.name='br-guest'
 uci set network.brguest.type='bridge'
 
 
-# =========================================================
-# 3. Guest DHCP
-# =========================================================
+# ============================================================
+# 5. Guest DHCP
+# ============================================================
+
+echo "[5/8] 配置 Guest DHCP..."
 
 uci set dhcp.Guest='dhcp'
 uci set dhcp.Guest.interface='Guest'
@@ -242,35 +244,50 @@ uci set dhcp.Guest.limit='150'
 uci set dhcp.Guest.leasetime='12h'
 
 
-# =========================================================
-# 4. Guest 2.4G
-# =========================================================
+# ============================================================
+# 6. Guest 2.4G
+# ============================================================
+
+echo "[6/8] 配置 Guest 2.4G..."
 
 uci set wireless.guest2g='wifi-iface'
 uci set wireless.guest2g.device='radio0'
 uci set wireless.guest2g.mode='ap'
+uci set wireless.guest2g.network='Guest'
 uci set wireless.guest2g.ssid='tr30000'
 uci set wireless.guest2g.encryption='psk2'
 uci set wireless.guest2g.key='333666999'
-uci set wireless.guest2g.network='Guest'
+uci set wireless.guest2g.disabled='0'
 
 
-# =========================================================
-# 5. Guest 5G
-# =========================================================
+# ============================================================
+# 7. Guest 5G
+# ============================================================
+
+echo "[7/8] 配置 Guest 5G..."
 
 uci set wireless.guest5g='wifi-iface'
 uci set wireless.guest5g.device='radio1'
 uci set wireless.guest5g.mode='ap'
+uci set wireless.guest5g.network='Guest'
 uci set wireless.guest5g.ssid='tr30000'
 uci set wireless.guest5g.encryption='psk2'
 uci set wireless.guest5g.key='333666999'
-uci set wireless.guest5g.network='Guest'
+uci set wireless.guest5g.disabled='0'
 
 
-# =========================================================
-# 6. 防火墙 Guest 区域
-# =========================================================
+# ============================================================
+# 8. 防火墙 Guest 区域
+# ============================================================
+
+echo "[8/8] 配置 Guest 防火墙..."
+
+
+# ------------------------------------------------------------
+# Guest Zone
+# 使用固定 section：guest
+# 不使用 uci add，避免重复执行产生 Guest、Guest2、Guest3...
+# ------------------------------------------------------------
 
 uci set firewall.guest='zone'
 uci set firewall.guest.name='Guest'
@@ -279,23 +296,27 @@ uci set firewall.guest.output='ACCEPT'
 uci set firewall.guest.forward='ACCEPT'
 uci set firewall.guest.masq='1'
 
-# 删除可能存在的旧 network 列表后重新添加
+# 清理旧 network 列表后重新绑定
 uci -q delete firewall.guest.network
 uci add_list firewall.guest.network='Guest'
 
 
-# =========================================================
-# 7. Guest → WAN
-# =========================================================
+# ------------------------------------------------------------
+# Guest → WAN
+# 使用固定 section：guest_wan
+# ------------------------------------------------------------
 
 uci set firewall.guest_wan='forwarding'
 uci set firewall.guest_wan.src='Guest'
 uci set firewall.guest_wan.dest='wan'
 
 
-# =========================================================
-# 8. 提交
-# =========================================================
+# ============================================================
+# 提交配置
+# ============================================================
+
+echo ""
+echo "正在提交配置..."
 
 uci commit network
 uci commit dhcp
@@ -303,13 +324,31 @@ uci commit wireless
 uci commit firewall
 
 
-# =========================================================
-# 9. 应用
-# =========================================================
+# ============================================================
+# 应用配置
+# ============================================================
+
+echo ""
+echo "正在重新加载网络..."
 
 service network reload
+
+sleep 3
+
+echo "正在重新加载 WiFi..."
+
 wifi reload
+
+sleep 5
+
+echo "正在重启 DHCP..."
+
 /etc/init.d/dnsmasq restart
+
+sleep 2
+
+echo "正在重启防火墙..."
+
 /etc/init.d/firewall restart
 
 exit 0
