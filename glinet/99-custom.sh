@@ -136,8 +136,6 @@ if [ -n "$wlan_5g_name" ] && [ -n "$wlan_5g_password" ] && [ ${#wlan_5g_password
     uci set wireless.@wifi-iface[1].key="$wlan_5g_password"
 fi
 
-uci commit wireless
-
 # 设置防火墙允许 LAN 输入
 uci set firewall.@zone[1].input='ACCEPT'
 uci commit firewall
