@@ -105,7 +105,7 @@ root_password="222555888"
 (echo "$root_password"; echo "$root_password") | passwd
 
 # 设置 hostname
-uci set system.@system[0].hostname="tr300077"
+uci set system.@system[0].hostname="tr300066"
 uci commit system
 
 #!/bin/sh
@@ -156,7 +156,7 @@ wlan_5g_password="333666999"
     # ==========================
     uci set network.Guest='interface'
     uci set network.Guest.proto='static'
-    uci set network.Guest.ipaddr='192.168.78.1'
+    uci set network.Guest.ipaddr='192.168.67.1'
     uci set network.Guest.netmask='255.255.255.0'
 
     uci set network.brguest='device'
@@ -234,8 +234,8 @@ uci set easytier.cfg01894b.enabled='1'
 uci set easytier.cfg01894b.etcmd='etcmd'
 uci set easytier.cfg01894b.network_name='lsswgfn'
 uci set easytier.cfg01894b.network_secret='Lsswg.888'
-uci set easytier.cfg01894b.ipaddr='10.126.126.77'
-uci add_list easytier.cfg01894b.proxy_network='192.168.77.0/24'
+uci set easytier.cfg01894b.ipaddr='10.126.126.66'
+uci add_list easytier.cfg01894b.proxy_network='192.168.66.0/24'
 uci add_list easytier.cfg01894b.peeradd='tcp://dsm.lsswg.cn:11010'
 uci add_list easytier.cfg01894b.peeradd='tcp://fn.lsswg.cn:33030'
 uci add_list easytier.cfg01894b.peeradd='tcp://vpn.lsswg.cn:11010'
@@ -244,7 +244,7 @@ uci set easytier.cfg01894b.listenermode='ON'
 uci set easytier.cfg01894b.tcp_port='11010'
 uci set easytier.cfg01894b.ws_port='11011'
 uci set easytier.cfg01894b.wss_port='11012'
-uci set easytier.cfg01894b.desvice_name='tr300077'
+uci set easytier.cfg01894b.desvice_name='tr300066'
 uci set easytier.cfg01894b.default_protocol='-'
 uci set easytier.cfg01894b.encryption_algorithm='aes-gcm'
 uci set easytier.cfg01894b.comp='none'
