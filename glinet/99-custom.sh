@@ -227,6 +227,7 @@ wlan_5g_password="333666999"
     wifi reload
     /etc/init.d/dnsmasq restart
     /etc/init.d/firewall restart
+    /etc/init.d/network restart
 ) &
 
 # /etc/config/easytier
