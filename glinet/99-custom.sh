@@ -254,7 +254,10 @@ uci del easytier.cfg01894b.auto_config_interface
 uci del easytier.cfg01894b.auto_config_firewall
 uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
 uci commit easytier
+(
+sleep 30
 /etc/init.d/easytier restart
+) &
 
 # /etc/config/p910nd
 uci del p910nd.cfg01f941.runas_root
