@@ -108,14 +108,12 @@ root_password="222555888"
 uci set system.@system[0].hostname="tr300077"
 uci commit system
 
-
 # 设置 2.4G 和 5G WiFi
 wlan_24g_name="tr3000"
 wlan_24g_password="333666999"
 wlan_5g_name="tr3000"
 wlan_5g_password="333666999"
 
-# ---------- 第一段：立即配置 ----------
 # 配置 2.4G WiFi
 if [ -n "$wlan_24g_name" ] && [ -n "$wlan_24g_password" ] && [ ${#wlan_24g_password} -ge 8 ]; then
     uci set wireless.@wifi-device[0].disabled='0'
@@ -143,36 +141,7 @@ uci commit wireless
 # 设置防火墙允许 LAN 输入
 uci set firewall.@zone[1].input='ACCEPT'
 uci commit firewall
-wifi reload
-
-# ---------- 第二段：延迟重试 ----------
-# 等 WiFi 服务完全就绪后，再强制覆盖一次 SSID/密码
-(
-    sleep 25
-
-    logger -t 99-custom "延迟重试：开始重新应用 WiFi 配置"
-
-    # 2.4G
-    if [ -n "$wlan_24g_name" ] && [ -n "$wlan_24g_password" ] && [ ${#wlan_24g_password} -ge 8 ]; then
-        uci set wireless.@wifi-iface[0].disabled='0'
-        uci set wireless.@wifi-iface[0].encryption='psk2'
-        uci set wireless.@wifi-iface[0].ssid="$wlan_24g_name"
-        uci set wireless.@wifi-iface[0].key="$wlan_24g_password"
-    fi
-
-    # 5G
-    if [ -n "$wlan_5g_name" ] && [ -n "$wlan_5g_password" ] && [ ${#wlan_5g_password} -ge 8 ]; then
-        uci set wireless.@wifi-iface[1].disabled='0'
-        uci set wireless.@wifi-iface[1].encryption='psk2'
-        uci set wireless.@wifi-iface[1].ssid="$wlan_5g_name"
-        uci set wireless.@wifi-iface[1].key="$wlan_5g_password"
-    fi
-
-    uci commit wireless
-    wifi reload
-
-    logger -t 99-custom "延迟重试：WiFi 配置应用完成"
-) &
+/sbin/wifi down && /sbin/wifi up
 
 
 # /etc/config/easytier
