@@ -176,11 +176,11 @@ uci set p910nd.cfg01f941.enabled='1'
 uci set p910nd.cfg01f941.bidirectional='0'
 
 # ============================================================
-# 1. 主 WiFi - 2.4G
+# 1. 主 WiFi 2.4G
 # ============================================================
 
 echo ""
-echo "[1/9] 配置主 WiFi 2.4G..."
+echo "[1/9] 配置 tr3000 2.4G..."
 
 uci set wireless.default_radio0='wifi-iface'
 uci set wireless.default_radio0.device='radio0'
@@ -191,11 +191,12 @@ uci set wireless.default_radio0.encryption='psk2'
 uci set wireless.default_radio0.key='333666999'
 uci set wireless.default_radio0.disabled='0'
 
+
 # ============================================================
-# 2. 主 WiFi - 5G
+# 2. 主 WiFi 5G
 # ============================================================
 
-echo "[2/9] 配置主 WiFi 5G..."
+echo "[2/9] 配置 tr3000 5G..."
 
 uci set wireless.default_radio1='wifi-iface'
 uci set wireless.default_radio1.device='radio1'
@@ -208,10 +209,12 @@ uci set wireless.default_radio1.disabled='0'
 
 
 # ============================================================
-# 3. 创建 Guest 网络
+# 3. Guest 网络
 # ============================================================
 
 echo "[3/9] 配置 Guest 网络..."
+
+uci -q delete network.Guest
 
 uci set network.Guest='interface'
 uci set network.Guest.proto='static'
@@ -219,31 +222,41 @@ uci set network.Guest.ipaddr='192.168.78.1'
 uci set network.Guest.netmask='255.255.255.0'
 uci set network.Guest.device='br-guest'
 
+
 # ============================================================
-# 4. 创建 Guest Bridge
+# 4. Guest Bridge
 # ============================================================
 
 echo "[4/9] 配置 Guest Bridge..."
+
+uci -q delete network.brguest
+
 uci set network.brguest='device'
 uci set network.brguest.name='br-guest'
 uci set network.brguest.type='bridge'
+
 
 # ============================================================
 # 5. Guest DHCP
 # ============================================================
 
 echo "[5/9] 配置 Guest DHCP..."
+
+uci -q delete dhcp.Guest
+
 uci set dhcp.Guest='dhcp'
 uci set dhcp.Guest.interface='Guest'
 uci set dhcp.Guest.start='100'
 uci set dhcp.Guest.limit='150'
 uci set dhcp.Guest.leasetime='12h'
 
+
 # ============================================================
 # 6. Guest 2.4G
 # ============================================================
 
-echo "[6/9] 配置 Guest 2.4G..."
+echo "[6/9] 配置 tr30000 2.4G..."
+
 uci set wireless.guest2g='wifi-iface'
 uci set wireless.guest2g.device='radio0'
 uci set wireless.guest2g.mode='ap'
@@ -253,11 +266,12 @@ uci set wireless.guest2g.encryption='psk2'
 uci set wireless.guest2g.key='333666999'
 uci set wireless.guest2g.disabled='0'
 
+
 # ============================================================
 # 7. Guest 5G
 # ============================================================
 
-echo "[7/9] 配置 Guest 5G..."
+echo "[7/9] 配置 tr30000 5G..."
 
 uci set wireless.guest5g='wifi-iface'
 uci set wireless.guest5g.device='radio1'
@@ -268,6 +282,7 @@ uci set wireless.guest5g.encryption='psk2'
 uci set wireless.guest5g.key='333666999'
 uci set wireless.guest5g.disabled='0'
 
+
 # ============================================================
 # 8. Guest 防火墙
 # ============================================================
@@ -275,42 +290,28 @@ uci set wireless.guest5g.disabled='0'
 echo "[8/9] 配置 Guest 防火墙..."
 
 
-# ------------------------------------------------------------
 # Guest 防火墙区域
-# ------------------------------------------------------------
-
 uci set firewall.guest='zone'
 uci set firewall.guest.name='Guest'
 uci set firewall.guest.input='ACCEPT'
 uci set firewall.guest.output='ACCEPT'
 uci set firewall.guest.forward='ACCEPT'
 uci set firewall.guest.masq='1'
-
-# 清理旧 network 列表
-uci -q delete firewall.guest.network
-
-# Guest → 防火墙区域
 uci add_list firewall.guest.network='Guest'
 
-
-# ------------------------------------------------------------
 # Guest → WAN
-# ------------------------------------------------------------
-
 uci set firewall.guest_wan='forwarding'
 uci set firewall.guest_wan.src='Guest'
 uci set firewall.guest_wan.dest='wan'
 
 
 # ============================================================
-# 9. 提交并应用
+# 9. 保存并应用
 # ============================================================
 
-echo "[9/9] 提交配置..."
-
+uci commit wireless
 uci commit network
 uci commit dhcp
-uci commit wireless
 uci commit firewall
 wifi reload
 
