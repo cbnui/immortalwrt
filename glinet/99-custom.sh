@@ -229,6 +229,7 @@ wlan_5g_password="333666999"
     /etc/init.d/firewall restart
 ) &
 
+sleep 22 && {
 # /etc/config/easytier
 uci set easytier.cfg01894b.enabled='1'
 uci set easytier.cfg01894b.etcmd='etcmd'
@@ -254,6 +255,7 @@ uci del easytier.cfg01894b.auto_config_firewall
 uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
 uci commit easytier
 /etc/init.d/easytier restart
+}
 
 # /etc/config/p910nd
 uci del p910nd.cfg01f941.runas_root
