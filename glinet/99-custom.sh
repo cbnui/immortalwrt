@@ -102,7 +102,187 @@ uci commit
 
 # 设置编译作者信息
 FILE_PATH="/etc/openwrt_release"
-NEW_DESCRIPTION="Packaged by wukongdaily"
+NEW_DESCRIPTION="Packaged by ifeige"
 sed -i "s/DISTRIB_DESCRIPTION='[^']*'/DISTRIB_DESCRIPTION='$NEW_DESCRIPTION'/" "$FILE_PATH"
+
+# 设置 root 密码
+root_password="222555888"
+(echo "$root_password"; echo "$root_password") | passwd
+
+# 设置 hostname
+uci set system.@system[0].hostname="25tr300077"
+uci commit system
+
+# 设置 2.4G 和 5G WiFi
+wlan_24g_name="tr3000"
+wlan_24g_password="333666999"
+wlan_5g_name="tr3000"
+wlan_5g_password="333666999"
+
+# 配置 2.4G WiFi
+if [ -n "$wlan_24g_name" ] && [ -n "$wlan_24g_password" ] && [ ${#wlan_24g_password} -ge 8 ]; then
+    uci set wireless.@wifi-device[0].disabled='0'
+    uci set wireless.radio0.htmode='HE40'
+    uci set wireless.radio0.cell_density='0'
+    uci set wireless.@wifi-iface[0].disabled='0'
+    uci set wireless.@wifi-iface[0].encryption='psk2'
+    uci set wireless.@wifi-iface[0].ssid="$wlan_24g_name"
+    uci set wireless.@wifi-iface[0].key="$wlan_24g_password"
+fi
+
+# 配置 5G WiFi
+if [ -n "$wlan_5g_name" ] && [ -n "$wlan_5g_password" ] && [ ${#wlan_5g_password} -ge 8 ]; then
+    uci set wireless.@wifi-device[1].disabled='0'
+    uci set wireless.radio1.htmode='HE160'
+    uci set wireless.radio1.cell_density='0'
+    uci set wireless.@wifi-iface[1].disabled='0'
+    uci set wireless.@wifi-iface[1].encryption='psk2'
+    uci set wireless.@wifi-iface[1].ssid="$wlan_5g_name"
+    uci set wireless.@wifi-iface[1].key="$wlan_5g_password"
+fi
+
+uci commit wireless
+
+# 设置防火墙允许 LAN 输入
+uci set firewall.@zone[1].input='ACCEPT'
+uci commit firewall
+wifi reload
+
+# 设置时区
+uci set system.@system[0].zonename='Asia/Shanghai'
+uci set system.@system[0].timezone='CST-8'
+
+# /etc/config/frpc
+uci set frpc.common.server_addr='frp.lsswg.cn'
+uci set frpc.common.token='88888888'
+uci set frpc.common.tls_enable='false'
+uci set frpc.cfg018539.user='root'
+uci set frpc.cfg018539.group='root'
+uci add frpc conf # =cfg043fcb
+uci set frpc.@conf[-1].name='web'
+uci set frpc.@conf[-1].type='tcp'
+uci set frpc.@conf[-1].use_encryption='false'
+uci set frpc.@conf[-1].use_compression='false'
+uci set frpc.@conf[-1].local_ip='127.0.0.1'
+uci set frpc.@conf[-1].local_port='80'
+uci set frpc.@conf[-1].remote_port='77'
+# 提交更改
+uci commit frpc
+# 应用配置（重启 frpc 服务）
+/etc/init.d/frpc restart
+
+# /etc/config/easytier
+uci set easytier.cfg01894b.enabled='1'
+uci set easytier.cfg01894b.etcmd='etcmd'
+uci set easytier.cfg01894b.network_name='lsswgfn'
+uci set easytier.cfg01894b.network_secret='Lsswg.888'
+uci set easytier.cfg01894b.ipaddr='10.126.126.77'
+uci add_list easytier.cfg01894b.proxy_network='192.168.77.0/24'
+uci add_list easytier.cfg01894b.peeradd='tcp://dsm.lsswg.cn:11010'
+uci add_list easytier.cfg01894b.peeradd='tcp://fn.lsswg.cn:33030'
+uci add_list easytier.cfg01894b.peeradd='tcp://vpn.lsswg.cn:11010'
+uci set easytier.cfg01894b.rpc_portal='15888'
+uci set easytier.cfg01894b.listenermode='ON'
+uci set easytier.cfg01894b.tcp_port='11010'
+uci set easytier.cfg01894b.ws_port='11011'
+uci set easytier.cfg01894b.wss_port='11012'
+uci set easytier.cfg01894b.desvice_name='tr300077'
+uci set easytier.cfg01894b.default_protocol='-'
+uci set easytier.cfg01894b.encryption_algorithm='aes-gcm'
+uci set easytier.cfg01894b.comp='none'
+uci set easytier.cfg01894b.log='off'
+uci del easytier.cfg01894b.auto_config_interface
+uci del easytier.cfg01894b.auto_config_firewall
+uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
+uci commit easytier
+/etc/init.d/easytier restart
+
+# /etc/config/p910nd （打印机配置---启用---双向模式）
+uci del p910nd.cfg01f941.runas_root
+uci del p910nd.cfg01f941.mdns
+uci del p910nd.cfg01f941.mdns_ty
+uci del p910nd.cfg01f941.mdns_note
+uci set p910nd.cfg01f941.enabled='1'
+uci set p910nd.cfg01f941.bidirectional='0'
+
+# ==========================
+# 1️⃣ 创建网络接口
+# ==========================
+# Guest 网段
+uci set network.Guest='interface'
+uci set network.Guest.proto='static'
+uci set network.Guest.ipaddr='192.168.89.1'
+uci set network.Guest.netmask='255.255.255.0'
+
+# 创建桥接 br-guest
+uci set network.brguest='device'
+uci set network.brguest.name='br-guest'
+uci set network.brguest.type='bridge'
+
+# 绑定 Guest 接口到桥
+uci set network.Guest.device='br-guest'
+uci commit network
+
+# ==========================
+# 2️⃣ 创建 DHCP 服务
+# ==========================
+uci set dhcp.Guest='dhcp'
+uci set dhcp.Guest.interface='Guest'
+uci set dhcp.Guest.start='100'
+uci set dhcp.Guest.limit='150'
+uci set dhcp.Guest.leasetime='12h'
+uci commit dhcp
+
+# ==========================
+# 3️⃣ 创建无线访客网络
+# ==========================
+
+# 2.4G
+uci set wireless.guest2g='wifi-iface'
+uci set wireless.guest2g.device='radio0'
+uci set wireless.guest2g.mode='ap'
+uci set wireless.guest2g.ssid='tr30000'
+uci set wireless.guest2g.encryption='psk2'
+uci set wireless.guest2g.key='333666999'
+uci set wireless.guest2g.network='Guest'
+
+# 5G
+uci set wireless.guest5g='wifi-iface'
+uci set wireless.guest5g.device='radio1'
+uci set wireless.guest5g.mode='ap'
+uci set wireless.guest5g.ssid='tr30000'
+uci set wireless.guest5g.encryption='psk2'
+uci set wireless.guest5g.key='333666999'
+uci set wireless.guest5g.network='Guest'
+
+uci commit wireless
+
+# ==========================
+# 4️⃣ 防火墙配置
+# ==========================
+
+# 新建 Guest 区域
+uci add firewall zone
+uci set firewall.@zone[-1].name='Guest'
+uci set firewall.@zone[-1].input='ACCEPT'
+uci set firewall.@zone[-1].output='ACCEPT'
+uci set firewall.@zone[-1].forward='ACCEPT'
+uci set firewall.@zone[-1].masq='1'
+uci add_list firewall.@zone[-1].network='Guest'
+
+# Guest → WAN
+uci add firewall forwarding
+uci set firewall.@forwarding[-1].src='Guest'
+uci set firewall.@forwarding[-1].dest='wan'
+
+uci commit firewall
+
+# ==========================
+# 5️⃣ 应用配置
+# ==========================
+service network reload
+wifi reload
+/etc/init.d/dnsmasq restart
+/etc/init.d/firewall restart
 
 exit 0
