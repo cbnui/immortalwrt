@@ -108,16 +108,14 @@ root_password="222555888"
 uci set system.@system[0].hostname="tr300077"
 uci commit system
 
-#!/bin/sh
-
+(
+    sleep 50
+    
 # 主 WiFi 参数
 wlan_24g_name="tr3000"
 wlan_24g_password="333666999"
 wlan_5g_name="tr3000"
 wlan_5g_password="333666999"
-
-(
-    sleep 20
 
     # ==========================
     # 一、主 WiFi 改名
@@ -229,11 +227,6 @@ wlan_5g_password="333666999"
     /etc/init.d/firewall restart
     /etc/init.d/network restart
 ) &
-(
-sleep 45
-/etc/init.d/network restart
-) &
-
 
 # /etc/config/easytier
 uci set easytier.cfg01894b.enabled='1'
@@ -259,12 +252,9 @@ uci del easytier.cfg01894b.auto_config_interface
 uci del easytier.cfg01894b.auto_config_firewall
 uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
 uci commit easytier
-(
-sleep 50
 /etc/init.d/easytier restart
-) &
-(
-sleep 70
+
+sleep 30
 /etc/init.d/easytier restart
 ) &
 
