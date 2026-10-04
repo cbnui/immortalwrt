@@ -231,8 +231,7 @@ wlan_5g_password="333666999"
 ) &
 
 # /etc/config/easytier
-(
-sleep 60
+
 uci set easytier.cfg01894b.enabled='1'
 uci set easytier.cfg01894b.etcmd='etcmd'
 uci set easytier.cfg01894b.network_name='lsswgfn'
@@ -256,6 +255,12 @@ uci del easytier.cfg01894b.auto_config_interface
 uci del easytier.cfg01894b.auto_config_firewall
 uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
 uci commit easytier
+(
+sleep 50
+/etc/init.d/easytier restart
+) &
+(
+sleep 70
 /etc/init.d/easytier restart
 ) &
 
