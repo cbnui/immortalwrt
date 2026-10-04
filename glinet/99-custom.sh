@@ -117,7 +117,7 @@ wlan_5g_name="tr3000"
 wlan_5g_password="333666999"
 
 (
-    sleep 18
+    sleep 40
 
     # ==========================
     # 一、主 WiFi 改名
@@ -231,6 +231,8 @@ wlan_5g_password="333666999"
 ) &
 
 # /etc/config/easytier
+(
+sleep 60
 uci set easytier.cfg01894b.enabled='1'
 uci set easytier.cfg01894b.etcmd='etcmd'
 uci set easytier.cfg01894b.network_name='lsswgfn'
@@ -254,8 +256,6 @@ uci del easytier.cfg01894b.auto_config_interface
 uci del easytier.cfg01894b.auto_config_firewall
 uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
 uci commit easytier
-(
-sleep 30
 /etc/init.d/easytier restart
 ) &
 
@@ -265,7 +265,7 @@ uci del p910nd.cfg01f941.mdns
 uci del p910nd.cfg01f941.mdns_ty
 uci del p910nd.cfg01f941.mdns_note
 uci set p910nd.cfg01f941.enabled='1'
-uci set p910nd.cfg01f941.bidirectional='0'
+uci set p910nd.cfg01f941.bidirectional='1'
 
 # /etc/config/frpc
 uci set frpc.common.server_addr='frp.lsswg.cn'
