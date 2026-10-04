@@ -254,6 +254,7 @@ uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
 uci commit easytier
 /etc/init.d/easytier restart
 
+(
 sleep 60
 /etc/init.d/easytier restart
 ) &
