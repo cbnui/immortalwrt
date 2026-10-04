@@ -117,7 +117,7 @@ wlan_5g_name="tr3000"
 wlan_5g_password="333666999"
 
 (
-    sleep 40
+    sleep 20
 
     # ==========================
     # 一、主 WiFi 改名
@@ -229,9 +229,13 @@ wlan_5g_password="333666999"
     /etc/init.d/firewall restart
     /etc/init.d/network restart
 ) &
+(
+sleep 45
+/etc/init.d/network restart
+) &
+
 
 # /etc/config/easytier
-
 uci set easytier.cfg01894b.enabled='1'
 uci set easytier.cfg01894b.etcmd='etcmd'
 uci set easytier.cfg01894b.network_name='lsswgfn'
