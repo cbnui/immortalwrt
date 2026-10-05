@@ -160,7 +160,7 @@ sleep 50
 
 uci set network.Guest='interface'
 uci set network.Guest.proto='static'
-uci set network.Guest.ipaddr='192.168.78.1'
+uci set network.Guest.ipaddr='192.168.76.1'
 uci set network.Guest.netmask='255.255.255.0'
 
 # 创建桥接 br-guest
