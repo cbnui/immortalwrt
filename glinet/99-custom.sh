@@ -231,6 +231,8 @@ uci commit firewall
 # ==========================
 service network reload
 wifi reload
+/etc/init.d/dnsmasq restart
+/etc/init.d/firewall restart
 ) &
 
 
