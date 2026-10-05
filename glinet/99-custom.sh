@@ -108,6 +108,7 @@ root_password="222555888"
 uci set system.@system[0].hostname="tr300088"
 uci commit system
 
+
 # 设置 2.4G 和 5G WiFi
 (
 sleep 30
@@ -156,7 +157,7 @@ sleep 50
 
 uci set network.Guest='interface'
 uci set network.Guest.proto='static'
-uci set network.Guest.ipaddr='192.168.89.1'
+uci set network.Guest.ipaddr='192.168.87.1'
 uci set network.Guest.netmask='255.255.255.0'
 
 # 创建桥接 br-guest
@@ -227,6 +228,8 @@ uci commit firewall
 # ==========================
 service network reload
 wifi reload
+/etc/init.d/dnsmasq restart
+/etc/init.d/firewall restart
 ) &
 
 # /etc/config/easytier
@@ -254,6 +257,7 @@ uci del easytier.cfg01894b.auto_config_firewall
 uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
 uci commit easytier
 /etc/init.d/easytier restart
+
 (
 sleep 60
 /etc/init.d/easytier restart
