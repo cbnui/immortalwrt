@@ -108,7 +108,6 @@ root_password="222555888"
 uci set system.@system[0].hostname="tr300066"
 uci commit system
 
-
 # 设置 2.4G 和 5G WiFi
 (
 sleep 30
@@ -147,9 +146,6 @@ uci set firewall.@zone[1].input='ACCEPT'
 uci commit firewall
 wifi reload
 ) &
-
-
-
 
 # ==========================
 # 1️⃣ 创建网络接口
@@ -234,10 +230,6 @@ wifi reload
 /etc/init.d/dnsmasq restart
 /etc/init.d/firewall restart
 ) &
-
-
-
-
 
 # /etc/config/easytier
 uci set easytier.cfg01894b.enabled='1'
