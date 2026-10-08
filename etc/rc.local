@@ -1,0 +1,6 @@
+sleep 20
+wifi down
+sleep 2
+wifi up
+
+exit 0
