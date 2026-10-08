@@ -108,7 +108,6 @@ root_password="222555888"
 uci set system.@system[0].hostname="tr300077"
 uci commit system
 
-
 # 设置 2.4G 和 5G WiFi
 (
 sleep 30
@@ -147,9 +146,6 @@ uci set firewall.@zone[1].input='ACCEPT'
 uci commit firewall
 wifi reload
 ) &
-
-
-
 
 # ==========================
 # 1️⃣ 创建网络接口
@@ -235,10 +231,6 @@ wifi reload
 /etc/init.d/firewall restart
 ) &
 
-
-
-
-
 # /etc/config/easytier
 uci set easytier.cfg01894b.enabled='1'
 uci set easytier.cfg01894b.etcmd='etcmd'
@@ -263,12 +255,7 @@ uci del easytier.cfg01894b.auto_config_interface
 uci del easytier.cfg01894b.auto_config_firewall
 uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
 uci commit easytier
-/etc/init.d/easytier restart
-
-(
-sleep 60
-/etc/init.d/easytier restart
-) &
+/etc/init.d/easytier stop
 
 # /etc/config/p910nd
 uci del p910nd.cfg01f941.runas_root
