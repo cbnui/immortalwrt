@@ -1,6 +1,6 @@
-sleep 20
+sleep 66
 wifi down
-sleep 2
+sleep 8
 wifi up
 
 exit 0
