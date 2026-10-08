@@ -1,6 +1,6 @@
-sleep 30
-/etc/init.d/easytier stop
-sleep 5
-/etc/init.d/easytier start
+sleep 66
+wifi down
+sleep 8
+wifi up
 
 exit 0
