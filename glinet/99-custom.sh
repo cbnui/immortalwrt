@@ -265,11 +265,6 @@ uci set easytier.cfg01894b.et_forward='etfwlan etfwwan lanfwet wanfwet'
 uci commit easytier
 /etc/init.d/easytier restart
 
-(
-sleep 60
-/etc/init.d/easytier restart
-) &
-
 # /etc/config/p910nd
 uci del p910nd.cfg01f941.runas_root
 uci del p910nd.cfg01f941.mdns
