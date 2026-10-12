@@ -1,6 +1,2 @@
-sleep 90
-wifi down
-sleep 10
-wifi up
-
+(sleep 120; /sbin/wifi up) &
 exit 0
