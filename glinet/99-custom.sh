@@ -164,6 +164,9 @@ uci set network.brguest='device'
 uci set network.brguest.name='br-guest'
 uci set network.brguest.type='bridge'
 
+#允许启动空网桥
+uci set network.brguest.bridge_empty='1'
+
 # 绑定 Guest 接口到桥
 uci set network.Guest.device='br-guest'
 uci commit network
