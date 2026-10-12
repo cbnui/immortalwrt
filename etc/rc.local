@@ -1,2 +1,2 @@
-(sleep 120; /sbin/wifi up) &
+
 exit 0
